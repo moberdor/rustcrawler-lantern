@@ -67,7 +67,8 @@ export class ThresholdScene extends Phaser.Scene {
           this.flyers.add(new FlyingEnemy(this, cx, cy, patrol));
         }
         else if (layer.name === 'Sentinels') {
-          this.sentinels.add(new Sentinel(this, cx, cy));
+          const f = this.prop(obj, 'facing', 0);
+          this.sentinels.add(new Sentinel(this, cx, cy, Phaser.Math.DegToRad(f)));
         }
         else if (layer.name === 'MovingPlatforms') {
           const dx = this.prop(obj, 'dx', 0);
