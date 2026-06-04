@@ -3,6 +3,8 @@ import { Player } from '../entities/Player.js';
 import { Enemy } from '../entities/Enemy.js';
 import { FlyingEnemy } from '../entities/FlyingEnemy.js';
 import { MovingPlatform } from '../entities/MovingPlatform.js';
+import { PressurePlate, Lever } from '../entities/Switch.js';
+import { Lamp } from '../entities/Lamp.js';
 
 export class ThresholdScene extends Phaser.Scene {
   constructor() { super('Threshold'); }
@@ -12,6 +14,11 @@ export class ThresholdScene extends Phaser.Scene {
     this._exiting = false;
     this.platformSprites = [];
     this.movingPlatforms = [];
+    this.plates = [];
+    this.levers = [];
+    this.lamps = [];
+    this._byName = new Map();
+    this._wiring = [];
   }
 
   create() {
@@ -61,10 +68,32 @@ export class ThresholdScene extends Phaser.Scene {
           const dx = this.prop(obj, 'dx', 0);
           const dy = this.prop(obj, 'dy', 0);
           const dur = this.prop(obj, 'duration', 2000);
+          const trig = this.prop(obj, 'triggerable', false);
           const w = obj.width || VIEW.TILE * 3;
-          const mp = new MovingPlatform(this, obj.x, obj.y, w, dx, dy, dur);
+          const mp = new MovingPlatform(this, obj.x, obj.y, w, dx, dy, dur, trig);
           this.movingPlatforms.push(mp);
+          if (obj.name) this._byName.set(obj.name, mp);
           for (const s of mp.group()) this.platformSprites.push(s);
+        }
+        else if (layer.name === 'PressurePlates') {
+          const p = new PressurePlate(this, cx, cy);
+          this.plates.push(p);
+          if (obj.name) this._byName.set(obj.name, p);
+          const t = this.prop(obj, 'targets', '');
+          if (t) this._wiring.push({ src: p, names: t });
+        }
+        else if (layer.name === 'Levers') {
+          const lv = new Lever(this, cx, cy);
+          this.levers.push(lv);
+          if (obj.name) this._byName.set(obj.name, lv);
+          const t = this.prop(obj, 'targets', '');
+          if (t) this._wiring.push({ src: lv, names: t });
+        }
+        else if (layer.name === 'Lamps') {
+          const startOn = this.prop(obj, 'startOn', false);
+          const lp = new Lamp(this, cx, cy, startOn);
+          this.lamps.push(lp);
+          if (obj.name) this._byName.set(obj.name, lp);
         }
         else if (layer.name === 'Key') {
           const k = this.physics.add.sprite(cx, cy, 'tiles', FRAMES.KEY);
@@ -81,12 +110,18 @@ export class ThresholdScene extends Phaser.Scene {
       }
     }
 
+    for (const w of this._wiring) {
+      for (const n of w.names.split(',').map(s => s.trim()).filter(Boolean)) {
+        w.src.link(this._byName.get(n));
+      }
+    }
+
     this.player = new Player(this, spawnX, spawnY);
-    this.input.keyboard.addCapture('SPACE,UP,DOWN,LEFT,RIGHT,W,A,S,D,SHIFT,X,R');
+    this.input.keyboard.addCapture('SPACE,UP,DOWN,LEFT,RIGHT,W,A,S,D,SHIFT,X,R,E');
     const keys = this.input.keyboard.addKeys({
       left: 'LEFT', right: 'RIGHT', up: 'UP', down: 'DOWN',
       W: 'W', A: 'A', S: 'S', D: 'D',
-      space: 'SPACE', shift: 'SHIFT', X: 'X', R: 'R',
+      space: 'SPACE', shift: 'SHIFT', X: 'X', R: 'R', E: 'E',
     });
     this.keys = keys;
     this.player.setInput(keys);
@@ -239,6 +274,12 @@ export class ThresholdScene extends Phaser.Scene {
     for (const e of this.enemies.getChildren()) e.update(time, delta);
     for (const f of this.flyers.getChildren()) f.update(time, delta);
     for (const mp of this.movingPlatforms) mp.update(time, delta);
+    for (const p of this.plates) p.step(this.physics.overlap(this.player, p));
+    if (Phaser.Input.Keyboard.JustDown(this.keys.E)) {
+      for (const lv of this.levers) {
+        if (this.physics.overlap(this.player, lv)) lv.toggle();
+      }
+    }
     const facing = this.player.facing;
     const speed = Math.abs(this.player.body.velocity.x);
     const lead = Phaser.Math.Clamp(speed / PLAYER.MAX_SPEED, 0, 1) * 40 * facing;

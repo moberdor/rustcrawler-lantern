@@ -1,7 +1,7 @@
 import { FRAMES, VIEW } from '../config.js';
 
 export class MovingPlatform {
-  constructor(scene, x, y, width, dx, dy, duration) {
+  constructor(scene, x, y, width, dx, dy, duration, triggerable) {
     this.scene = scene;
     this.sprites = [];
     const tileCount = Math.max(1, Math.round(width / VIEW.TILE));
@@ -25,9 +25,15 @@ export class MovingPlatform {
     this.elapsed = 0;
     this.lastPx = 0;
     this.lastPy = 0;
+    this.triggerable = !!triggerable;
+    this.running = !this.triggerable;
   }
 
+  onActivate() { this.running = true; }
+  onDeactivate() { this.running = false; }
+
   update(time, delta) {
+    if (!this.running) return;
     this.elapsed += delta;
     const phase = (this.elapsed % (this.duration * 2)) / this.duration;
     const tri = phase < 1 ? phase : 2 - phase;
