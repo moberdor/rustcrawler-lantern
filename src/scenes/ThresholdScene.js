@@ -5,6 +5,7 @@ import { FlyingEnemy } from '../entities/FlyingEnemy.js';
 import { MovingPlatform } from '../entities/MovingPlatform.js';
 import { PressurePlate, Lever } from '../entities/Switch.js';
 import { Lamp } from '../entities/Lamp.js';
+import { Sentinel } from '../entities/Sentinel.js';
 
 export class ThresholdScene extends Phaser.Scene {
   constructor() { super('Threshold'); }
@@ -39,6 +40,7 @@ export class ThresholdScene extends Phaser.Scene {
     this.pits = this.physics.add.staticGroup();
     this.enemies = this.physics.add.group();
     this.flyers = this.physics.add.group();
+    this.sentinels = this.physics.add.group();
     this.keyGroup = this.physics.add.group({ allowGravity: false, immovable: true });
     this.doorGroup = this.physics.add.group({ allowGravity: false, immovable: true });
 
@@ -63,6 +65,9 @@ export class ThresholdScene extends Phaser.Scene {
         else if (layer.name === 'FlyingEnemies') {
           const patrol = this.prop(obj, 'patrolDist', 48);
           this.flyers.add(new FlyingEnemy(this, cx, cy, patrol));
+        }
+        else if (layer.name === 'Sentinels') {
+          this.sentinels.add(new Sentinel(this, cx, cy));
         }
         else if (layer.name === 'MovingPlatforms') {
           const dx = this.prop(obj, 'dx', 0);
@@ -117,6 +122,7 @@ export class ThresholdScene extends Phaser.Scene {
     }
 
     this.player = new Player(this, spawnX, spawnY);
+    for (const s of this.sentinels.getChildren()) s.setTarget(this.player);
     this.input.keyboard.addCapture('SPACE,UP,DOWN,LEFT,RIGHT,W,A,S,D,SHIFT,X,R,E');
     const keys = this.input.keyboard.addKeys({
       left: 'LEFT', right: 'RIGHT', up: 'UP', down: 'DOWN',
@@ -138,6 +144,7 @@ export class ThresholdScene extends Phaser.Scene {
     this.physics.add.overlap(this.player, this.pits, () => this.kill());
     this.physics.add.overlap(this.player, this.enemies, (_p, e) => this.hurtFromEnemy(e));
     this.physics.add.overlap(this.player, this.flyers, (_p, e) => this.hurtFromEnemy(e));
+    this.physics.add.overlap(this.player, this.sentinels, (_p, e) => this.hurtFromEnemy(e));
     this.physics.add.overlap(this.player, this.keyGroup, (_p, k) => this.pickupKey(k));
     this.physics.add.overlap(this.player, this.doorGroup, (_p, d) => this.tryExit(d));
 
@@ -273,6 +280,7 @@ export class ThresholdScene extends Phaser.Scene {
     this.player.update(time, delta);
     for (const e of this.enemies.getChildren()) e.update(time, delta);
     for (const f of this.flyers.getChildren()) f.update(time, delta);
+    for (const s of this.sentinels.getChildren()) s.update(time, delta);
     for (const mp of this.movingPlatforms) mp.update(time, delta);
     for (const p of this.plates) p.step(this.physics.overlap(this.player, p));
     if (Phaser.Input.Keyboard.JustDown(this.keys.E)) {
