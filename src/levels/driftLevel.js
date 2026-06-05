@@ -32,7 +32,7 @@ export const driftLevel = {
     { x: 88, y: 184, name: 'plate1', targets: 'lamp1' },
   ],
   lamps: [
-    { x: 160, y: 96, name: 'lamp1', startOn: false },
+    { x: 88, y: 152, name: 'lamp1', startOn: false },
   ],
   movingPlatforms: [
     { x: 176, y: 192, w: 48, dx: 0, dy: -48, duration: 2400 },
