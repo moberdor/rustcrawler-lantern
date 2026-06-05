@@ -515,7 +515,11 @@ export class LevelScene extends Phaser.Scene {
     this.refreshHearts();
     this.cameras.main.shake(220, 0.012);
     this.cameras.main.fadeOut(500, 0, 0, 0);
-    this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('GameOver', { score: this.player.score }));
+    this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('GameOver', {
+      score: this.player.score,
+      levelKey: this.scene.key,
+      resumeScore: this.startingScore,
+    }));
   }
 
   update(time, delta) {
