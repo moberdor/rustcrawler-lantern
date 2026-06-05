@@ -27,12 +27,16 @@ export class Sentinel extends Phaser.Physics.Arcade.Sprite {
     this.speed = 55;
 
     this.cone = scene.add.graphics().setDepth(3);
+    this.alertText = scene.add.text(x, y - 12, '!', {
+      fontFamily: '"Press Start 2P"', fontSize: '8px', color: '#ff4444',
+    }).setOrigin(0.5, 1).setDepth(4).setVisible(false).setResolution(2);
   }
 
   setTarget(t) { this.target = t; }
 
   destroy(fromScene) {
     if (this.cone) this.cone.destroy();
+    if (this.alertText) this.alertText.destroy();
     super.destroy(fromScene);
   }
 
@@ -51,6 +55,10 @@ export class Sentinel extends Phaser.Physics.Arcade.Sprite {
       }
     }
     if (visible) {
+      if (this.state !== 'chase') {
+        this.scene.sound.play('sfx_hit', { volume: 0.25, detune: 700 });
+        this.scene.cameras.main.flash(70, 140, 30, 30);
+      }
       this.state = 'chase';
       this.lastSeen = { x: this.target.x, y: this.target.y };
       this.alertUntil = time + this.alertHold;
@@ -137,5 +145,7 @@ export class Sentinel extends Phaser.Physics.Arcade.Sprite {
     }
     this.follow();
     this.drawCone();
+    this.alertText.setPosition(this.x, this.y - 6);
+    this.alertText.setVisible(this.state !== 'patrol');
   }
 }

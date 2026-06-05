@@ -48,9 +48,27 @@ export class MovingPlatform {
         s.y += ddy;
         s.body.updateFromGameObject();
       }
+      this.carryRider(ddx, ddy);
     }
     this.lastPx = px;
     this.lastPy = py;
+  }
+
+  carryRider(ddx, ddy) {
+    const p = this.scene.player;
+    if (!p || !p.body || !p.body.blocked.down) return;
+    const pCx = p.body.x + p.body.width / 2;
+    const pBot = p.body.y + p.body.height;
+    for (const s of this.sprites) {
+      const sb = s.body;
+      if (pCx < sb.x || pCx > sb.x + sb.width) continue;
+      if (Math.abs(pBot - sb.y) > 2) continue;
+      p.x += ddx;
+      p.y += ddy;
+      p.body.position.x += ddx;
+      p.body.position.y += ddy;
+      return;
+    }
   }
 
   group() { return this.sprites; }

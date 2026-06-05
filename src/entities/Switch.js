@@ -34,7 +34,7 @@ export class PressurePlate extends Switch {
   step(overlapping) {
     if (overlapping === this.active) return;
     this.setFrame(overlapping ? FRAMES.PLATE_DOWN : FRAMES.PLATE_UP);
-    if (overlapping) this.scene.sound.play('sfx_pickup', { volume: 0.35 });
+    if (overlapping) this.scene.sound.play('sfx_pickup', { volume: 0.35, detune: 300 });
     this.fire(overlapping);
   }
 }
@@ -48,7 +48,7 @@ export class Lever extends Switch {
   toggle() {
     const next = !this.active;
     this.setFrame(next ? FRAMES.LEVER_RIGHT : FRAMES.LEVER_LEFT);
-    this.scene.sound.play('sfx_pickup', { volume: 0.5 });
+    this.scene.sound.play('sfx_pickup', { volume: 0.5, detune: next ? 500 : 100 });
     this.fire(next);
   }
 }

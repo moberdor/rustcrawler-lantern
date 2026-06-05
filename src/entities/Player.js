@@ -138,7 +138,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     const dashJustDown = Phaser.Input.Keyboard.JustDown(k.shift) || Phaser.Input.Keyboard.JustDown(k.X);
     if (Phaser.Input.Keyboard.JustDown(k.Q)) {
       this.lanternOn = !this.lanternOn;
-      this.scene.sound.play('sfx_pickup', { volume: 0.4 });
+      this.scene.sound.play('sfx_pickup', { volume: 0.4, detune: this.lanternOn ? -200 : -500 });
     }
 
     if (jumpJustDown) this.jumpRequestedAt = time;
