@@ -27,8 +27,8 @@ export class GameOverScene extends Phaser.Scene {
       fontFamily: FONT, fontSize: '9px', color: '#ffffff',
     }).setOrigin(0.5).setResolution(2);
     this.tweens.add({ targets: prompt, alpha: 0.3, duration: 600, yoyo: true, repeat: -1 });
-    this.input.keyboard.once('keydown-R', () => this.scene.start('Threshold'));
-    this.input.keyboard.once('keydown-SPACE', () => this.scene.start('Threshold'));
+    this.input.keyboard.once('keydown-R', () => this.scene.start('Drift'));
+    this.input.keyboard.once('keydown-SPACE', () => this.scene.start('Drift'));
     this.input.keyboard.once('keydown-ESC', () => this.scene.start('Title'));
   }
 }

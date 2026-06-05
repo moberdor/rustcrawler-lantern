@@ -279,6 +279,12 @@ export class LevelScene extends Phaser.Scene {
         if (layer.name === 'Spawn') { spawnX = cx; spawnY = cy; }
       }
     }
+    if (this.source.extraSentinels) {
+      for (const s of this.source.extraSentinels) {
+        const facing = Phaser.Math.DegToRad(s.facing || 0);
+        this.sentinels.add(new Sentinel(this, s.x, s.y, facing));
+      }
+    }
     return { spawnX, spawnY };
   }
 

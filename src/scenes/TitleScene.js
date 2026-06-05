@@ -57,8 +57,8 @@ export class TitleScene extends Phaser.Scene {
       fontFamily: FONT, fontSize: '6px', color: '#888888',
     }).setOrigin(0.5).setResolution(2);
 
-    this.input.keyboard.once('keydown-SPACE', () => this.scene.start('Threshold'));
-    this.input.keyboard.once('keydown-ENTER', () => this.scene.start('Threshold'));
+    this.input.keyboard.once('keydown-SPACE', () => this.scene.start('Drift'));
+    this.input.keyboard.once('keydown-ENTER', () => this.scene.start('Drift'));
     this.input.keyboard.once('keydown-C', () => this.scene.start('Credits'));
   }
 }

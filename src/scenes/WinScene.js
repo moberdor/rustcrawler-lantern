@@ -30,8 +30,8 @@ export class WinScene extends Phaser.Scene {
 
     this.spawnConfetti();
 
-    this.input.keyboard.once('keydown-R', () => this.scene.start('Threshold'));
-    this.input.keyboard.once('keydown-SPACE', () => this.scene.start('Threshold'));
+    this.input.keyboard.once('keydown-R', () => this.scene.start('Drift'));
+    this.input.keyboard.once('keydown-SPACE', () => this.scene.start('Drift'));
     this.input.keyboard.once('keydown-ESC', () => this.scene.start('Title'));
     this.input.keyboard.once('keydown-C', () => this.scene.start('Credits'));
   }

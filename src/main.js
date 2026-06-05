@@ -35,12 +35,22 @@ import { driftLevel } from './levels/driftLevel.js';
 import { sumpLevel } from './levels/sumpLevel.js';
 
 const thresholdObjectives = [
+  { type: 'sentinel', label: 'MORE SENTINELS THIS TIME' },
+  { type: 'lantern_off', label: 'STAY UNSEEN WITH Q' },
   { type: 'coin', label: 'COLLECT COINS FOR SCORE' },
   { type: 'key', label: 'FIND THE KEY' },
   { type: 'door', label: 'REACH THE DOOR' },
 ];
-const threshold = new LevelScene('Threshold', { tiledKey: 'threshold', objectives: thresholdObjectives }, 'Drift', 'THRESHOLD');
-const drift = new LevelScene('Drift', { data: driftLevel }, 'Sump', 'DRIFT');
+const thresholdExtras = [
+  { x: 640, y: 340, facing: 90 },
+  { x: 1600, y: 330, facing: 90 },
+];
+const drift = new LevelScene('Drift', { data: driftLevel }, 'Threshold', 'DRIFT');
+const threshold = new LevelScene('Threshold', {
+  tiledKey: 'threshold',
+  objectives: thresholdObjectives,
+  extraSentinels: thresholdExtras,
+}, 'Sump', 'THRESHOLD');
 const sump = new LevelScene('Sump', { data: sumpLevel }, 'Win', 'THE SUMP');
 
 const config = {
