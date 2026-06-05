@@ -13,22 +13,27 @@ export class CreditsScene extends Phaser.Scene {
     }).setOrigin(0.5).setResolution(2);
 
     const blocks = [
-      ['DESIGN AND CODE', 'MARCUS OBERDORFER'],
-      ['COURSE', 'CMPM 120, UC SANTA CRUZ'],
-      ['ENGINE', 'PHASER 3.80'],
-      ['TILESET', 'KENNEY MONOCHROME (CC0)'],
-      ['SOUND', 'SFXR + FREESOUND (CC0)'],
+      { label: 'DESIGN AND CODE', values: ['MARCUS OBERDORFER'] },
+      { label: 'COURSE', values: ['CMPM 120, UC SANTA CRUZ'] },
+      { label: 'ASSETS', values: [
+        'KENNEY.NL/ASSETS/1-BIT-PLATFORMER-PACK',
+        'KENNEY.NL/ASSETS/DIGITAL-AUDIO',
+      ] },
     ];
 
     let y = 100;
-    for (const [label, value] of blocks) {
-      this.add.text(VIEW.WIDTH / 2, y, label, {
+    for (const block of blocks) {
+      this.add.text(VIEW.WIDTH / 2, y, block.label, {
         fontFamily: FONT, fontSize: '6px', color: '#888888',
       }).setOrigin(0.5).setResolution(2);
-      this.add.text(VIEW.WIDTH / 2, y + 12, value, {
-        fontFamily: FONT, fontSize: '8px', color: '#ffffff',
-      }).setOrigin(0.5).setResolution(2);
-      y += 36;
+      let valY = y + 12;
+      for (const val of block.values) {
+        this.add.text(VIEW.WIDTH / 2, valY, val, {
+          fontFamily: FONT, fontSize: '8px', color: '#ffffff',
+        }).setOrigin(0.5).setResolution(2);
+        valY += 12;
+      }
+      y = valY + 14;
     }
 
     const prompt = this.add.text(VIEW.WIDTH / 2, VIEW.HEIGHT - 30, 'PRESS SPACE TO RETURN', {
