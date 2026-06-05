@@ -6,6 +6,7 @@ import { MovingPlatform } from '../entities/MovingPlatform.js';
 import { PressurePlate, Lever } from '../entities/Switch.js';
 import { Lamp } from '../entities/Lamp.js';
 import { Sentinel } from '../entities/Sentinel.js';
+import { Lighting } from '../systems/Lighting.js';
 
 export class ThresholdScene extends Phaser.Scene {
   constructor() { super('Threshold'); }
@@ -124,11 +125,11 @@ export class ThresholdScene extends Phaser.Scene {
 
     this.player = new Player(this, spawnX, spawnY);
     for (const s of this.sentinels.getChildren()) s.setTarget(this.player);
-    this.input.keyboard.addCapture('SPACE,UP,DOWN,LEFT,RIGHT,W,A,S,D,SHIFT,X,R,E');
+    this.input.keyboard.addCapture('SPACE,UP,DOWN,LEFT,RIGHT,W,A,S,D,SHIFT,X,R,E,Q');
     const keys = this.input.keyboard.addKeys({
       left: 'LEFT', right: 'RIGHT', up: 'UP', down: 'DOWN',
       W: 'W', A: 'A', S: 'S', D: 'D',
-      space: 'SPACE', shift: 'SHIFT', X: 'X', R: 'R', E: 'E',
+      space: 'SPACE', shift: 'SHIFT', X: 'X', R: 'R', E: 'E', Q: 'Q',
     });
     this.keys = keys;
     this.player.setInput(keys);
@@ -153,6 +154,15 @@ export class ThresholdScene extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
     this.cameras.main.startFollow(this.player, true, 0.12, 0.12);
     this.cameras.main.setDeadzone(160, 90);
+
+    this.lighting = new Lighting(this, map.widthInPixels, map.heightInPixels);
+    this.lighting.add(() => ({
+      x: this.player.x, y: this.player.y,
+      on: this.player.lanternOn, flicker: true, scale: 1.4,
+    }));
+    for (const lp of this.lamps) {
+      this.lighting.add(() => ({ x: lp.x, y: lp.y, on: lp.on, flicker: false, scale: 0.9 }));
+    }
 
     this.hud = this.add.container(0, 0).setScrollFactor(0).setDepth(100);
     this.hearts = [];
@@ -293,6 +303,8 @@ export class ThresholdScene extends Phaser.Scene {
     const speed = Math.abs(this.player.body.velocity.x);
     const lead = Phaser.Math.Clamp(speed / PLAYER.MAX_SPEED, 0, 1) * 40 * facing;
     this.cameras.main.setFollowOffset(-lead, 0);
+
+    this.lighting.update(time);
 
     if (this.player.y > this.physics.world.bounds.height + 32) this.kill();
   }

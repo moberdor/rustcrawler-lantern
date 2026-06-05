@@ -38,11 +38,12 @@ export class Sentinel extends Phaser.Physics.Arcade.Sprite {
 
   scan(time) {
     if (!this.target) return;
+    const lit = this.target.lanternOn !== false;
     const dx = this.target.x - this.x;
     const dy = this.target.y - this.y;
     const dist = Math.hypot(dx, dy);
     let visible = false;
-    if (dist <= this.viewRange) {
+    if (lit && dist <= this.viewRange) {
       const a = Math.atan2(dy, dx);
       const diff = Math.abs(Phaser.Math.Angle.Wrap(a - this.facing));
       if (diff <= this.viewHalf) {

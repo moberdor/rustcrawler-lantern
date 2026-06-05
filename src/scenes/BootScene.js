@@ -22,7 +22,34 @@ export class BootScene extends Phaser.Scene {
     this.makeParticleTexture('trail', 0xcccccc, 4);
     this.makeCaveFar('bg_far');
     this.makeCaveNear('bg_near');
+    this.makeLightMask('lightmask');
     this.waitForFont().then(() => this.scene.start('Title'));
+  }
+
+  makeLightMask(key) {
+    const size = 192;
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+    const center = size / 2;
+    const img = ctx.createImageData(size, size);
+    for (let y = 0; y < size; y++) {
+      for (let x = 0; x < size; x++) {
+        const dx = x - center;
+        const dy = y - center;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        const t = Math.min(1, d / center);
+        const a = Math.pow(Math.max(0, 1 - t), 0.7);
+        const i = (y * size + x) * 4;
+        img.data[i] = 255;
+        img.data[i + 1] = 255;
+        img.data[i + 2] = 255;
+        img.data[i + 3] = Math.round(a * 255);
+      }
+    }
+    ctx.putImageData(img, 0, 0);
+    this.textures.addCanvas(key, canvas);
   }
 
   async waitForFont() {

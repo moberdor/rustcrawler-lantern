@@ -22,6 +22,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.dashEndsAt = 0;
     this.dashReadyAt = 0;
     this.wasGrounded = false;
+    this.lanternOn = true;
 
     this.createDustEmitter();
     this.createJumpEmitter();
@@ -135,6 +136,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     const jumpJustDown = Phaser.Input.Keyboard.JustDown(k.space) || Phaser.Input.Keyboard.JustDown(k.W) || Phaser.Input.Keyboard.JustDown(k.up);
     const jumpReleased = Phaser.Input.Keyboard.JustUp(k.space) || Phaser.Input.Keyboard.JustUp(k.W) || Phaser.Input.Keyboard.JustUp(k.up);
     const dashJustDown = Phaser.Input.Keyboard.JustDown(k.shift) || Phaser.Input.Keyboard.JustDown(k.X);
+    if (Phaser.Input.Keyboard.JustDown(k.Q)) {
+      this.lanternOn = !this.lanternOn;
+      this.scene.sound.play('sfx_pickup', { volume: 0.4 });
+    }
 
     if (jumpJustDown) this.jumpRequestedAt = time;
 
