@@ -27,10 +27,10 @@ export class TitleScene extends Phaser.Scene {
 
     this.add.text(VIEW.WIDTH / 2, 70, 'RUSTCRAWLER', {
       fontFamily: FONT, fontSize: '24px', color: '#ffffff',
-    }).setOrigin(0.5).setResolution(2);
+    }).setOrigin(0.5);
     this.add.text(VIEW.WIDTH / 2, 110, 'THRESHOLD', {
       fontFamily: FONT, fontSize: '10px', color: '#888888',
-    }).setOrigin(0.5).setResolution(2);
+    }).setOrigin(0.5);
 
     const lines = [
       'MOVE   ARROWS / A D',
@@ -44,18 +44,18 @@ export class TitleScene extends Phaser.Scene {
     for (const line of lines) {
       this.add.text(VIEW.WIDTH / 2, y, line, {
         fontFamily: FONT, fontSize: '7px', color: '#cccccc',
-      }).setOrigin(0.5).setResolution(2);
+      }).setOrigin(0.5);
       y += 14;
     }
 
     const prompt = this.add.text(VIEW.WIDTH / 2, VIEW.HEIGHT - 40, 'PRESS SPACE TO START', {
       fontFamily: FONT, fontSize: '9px', color: '#ffffff',
-    }).setOrigin(0.5).setResolution(2);
+    }).setOrigin(0.5);
     this.tweens.add({ targets: prompt, alpha: 0.3, duration: 600, yoyo: true, repeat: -1 });
 
     this.add.text(VIEW.WIDTH / 2, VIEW.HEIGHT - 16, 'C   CREDITS', {
       fontFamily: FONT, fontSize: '6px', color: '#888888',
-    }).setOrigin(0.5).setResolution(2);
+    }).setOrigin(0.5);
 
     this.input.keyboard.once('keydown-SPACE', () => this.scene.start('Drift'));
     this.input.keyboard.once('keydown-ENTER', () => this.scene.start('Drift'));

@@ -19,13 +19,13 @@ export class WinScene extends Phaser.Scene {
 
     this.add.text(VIEW.WIDTH / 2, 110, 'YOU ESCAPED', {
       fontFamily: FONT, fontSize: '16px', color: '#ffffff',
-    }).setOrigin(0.5).setResolution(2);
+    }).setOrigin(0.5);
     this.add.text(VIEW.WIDTH / 2, 190, 'SCORE ' + this.finalScore, {
       fontFamily: FONT, fontSize: '11px', color: '#ffffff',
-    }).setOrigin(0.5).setResolution(2);
+    }).setOrigin(0.5);
     const prompt = this.add.text(VIEW.WIDTH / 2, 270, 'PRESS R TO PLAY AGAIN', {
       fontFamily: FONT, fontSize: '8px', color: '#ffffff',
-    }).setOrigin(0.5).setResolution(2);
+    }).setOrigin(0.5);
     this.tweens.add({ targets: prompt, alpha: 0.3, duration: 600, yoyo: true, repeat: -1 });
 
     this.spawnConfetti();

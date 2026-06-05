@@ -35,7 +35,7 @@ export class Sentinel extends Phaser.Physics.Arcade.Sprite {
     this.cone = scene.add.graphics().setDepth(3);
     this.alertText = scene.add.text(x, y - 12, '!', {
       fontFamily: '"Press Start 2P"', fontSize: '8px', color: '#ffffff',
-    }).setOrigin(0.5, 1).setDepth(4).setVisible(false).setResolution(2);
+    }).setOrigin(0.5, 1).setDepth(4).setVisible(false);
   }
 
   setTarget(t) { this.target = t; }

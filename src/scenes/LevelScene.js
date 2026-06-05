@@ -137,7 +137,7 @@ export class LevelScene extends Phaser.Scene {
     }
     this.scoreText = this.add.text(VIEW.WIDTH - 8, 6, 'SCORE ' + this.player.score, {
       fontFamily: FONT, fontSize: '8px', color: '#ffffff',
-    }).setOrigin(1, 0).setScrollFactor(0).setResolution(2);
+    }).setOrigin(1, 0).setScrollFactor(0);
     this.keyIcon = this.add.image(VIEW.WIDTH - 8, 22, 'tiles', FRAMES.KEY)
       .setOrigin(1, 0.5).setScrollFactor(0).setVisible(false);
     this.hud.add([this.scoreText, this.keyIcon]);
@@ -163,12 +163,12 @@ export class LevelScene extends Phaser.Scene {
 
     const name = this.add.text(VIEW.WIDTH / 2, 44, this.levelName || 'LEVEL', {
       fontFamily: FONT, fontSize: '14px', color: '#ffffff',
-    }).setOrigin(0.5).setResolution(2);
+    }).setOrigin(0.5);
     overlay.add(name);
 
     const header = this.add.text(VIEW.WIDTH / 2, 78, 'OBJECTIVES', {
       fontFamily: FONT, fontSize: '8px', color: '#888888',
-    }).setOrigin(0.5).setResolution(2);
+    }).setOrigin(0.5);
     overlay.add(header);
 
     const startY = 110;
@@ -181,13 +181,13 @@ export class LevelScene extends Phaser.Scene {
       const icon = this.makeObjectiveIcon(iconX, y, obj.type);
       const label = this.add.text(labelX, y, obj.label, {
         fontFamily: FONT, fontSize: '7px', color: '#cccccc',
-      }).setOrigin(0, 0.5).setResolution(2);
+      }).setOrigin(0, 0.5);
       overlay.add([icon, label]);
     }
 
     const prompt = this.add.text(VIEW.WIDTH / 2, VIEW.HEIGHT - 30, 'PRESS SPACE TO BEGIN', {
       fontFamily: FONT, fontSize: '8px', color: '#ffffff',
-    }).setOrigin(0.5).setResolution(2);
+    }).setOrigin(0.5);
     const promptTween = this.tweens.add({ targets: prompt, alpha: 0.4, duration: 600, yoyo: true, repeat: -1 });
     overlay.add(prompt);
 
@@ -255,7 +255,7 @@ export class LevelScene extends Phaser.Scene {
   showLevelTitle() {
     const label = this.add.text(VIEW.WIDTH / 2, VIEW.HEIGHT / 2, this.levelName, {
       fontFamily: FONT, fontSize: '14px', color: '#ffffff',
-    }).setOrigin(0.5).setScrollFactor(0).setDepth(120).setResolution(2).setAlpha(0);
+    }).setOrigin(0.5).setScrollFactor(0).setDepth(120).setAlpha(0);
     this.tweens.add({
       targets: label,
       alpha: { from: 0, to: 1 },
@@ -337,7 +337,7 @@ export class LevelScene extends Phaser.Scene {
       if (obj.name) this._byName.set(obj.name, lp);
     }
     else if (layerName === 'Key') {
-      const k = this.physics.add.sprite(cx, cy, 'tiles', FRAMES.KEY);
+      const k = this.physics.add.sprite(cx, cy, 'tiles', FRAMES.KEY).setDepth(60);
       k.body.setAllowGravity(false); k.body.setImmovable(true);
       this.tweens.add({ targets: k, y: cy - 2, duration: 600, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
       this.keyGroup.add(k);
@@ -398,7 +398,7 @@ export class LevelScene extends Phaser.Scene {
       if (lp.name) this._byName.set(lp.name, lamp);
     }
     if (def.key) {
-      const k = this.physics.add.sprite(def.key.x, def.key.y, 'tiles', FRAMES.KEY);
+      const k = this.physics.add.sprite(def.key.x, def.key.y, 'tiles', FRAMES.KEY).setDepth(60);
       k.body.setAllowGravity(false); k.body.setImmovable(true);
       this.tweens.add({ targets: k, y: def.key.y - 2, duration: 600, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
       this.keyGroup.add(k);

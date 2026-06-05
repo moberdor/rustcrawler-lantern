@@ -23,13 +23,13 @@ export class GameOverScene extends Phaser.Scene {
 
     this.add.text(VIEW.WIDTH / 2, 110, 'YOU DIED', {
       fontFamily: FONT, fontSize: '22px', color: '#ffffff',
-    }).setOrigin(0.5).setResolution(2);
+    }).setOrigin(0.5);
     this.add.text(VIEW.WIDTH / 2, 160, 'SCORE ' + this.finalScore, {
       fontFamily: FONT, fontSize: '10px', color: '#cccccc',
-    }).setOrigin(0.5).setResolution(2);
+    }).setOrigin(0.5);
     const prompt = this.add.text(VIEW.WIDTH / 2, 240, 'PRESS R TO RETRY', {
       fontFamily: FONT, fontSize: '9px', color: '#ffffff',
-    }).setOrigin(0.5).setResolution(2);
+    }).setOrigin(0.5);
     this.tweens.add({ targets: prompt, alpha: 0.3, duration: 600, yoyo: true, repeat: -1 });
     this.input.keyboard.once('keydown-R', () => this.scene.start(this.fromLevel, { score: this.resumeScore }));
     this.input.keyboard.once('keydown-SPACE', () => this.scene.start(this.fromLevel, { score: this.resumeScore }));
