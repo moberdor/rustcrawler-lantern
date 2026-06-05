@@ -1,9 +1,16 @@
 import { VIEW } from './config.js';
 import { BootScene } from './scenes/BootScene.js';
 import { TitleScene } from './scenes/TitleScene.js';
-import { ThresholdScene } from './scenes/ThresholdScene.js';
+import { LevelScene } from './scenes/LevelScene.js';
 import { GameOverScene } from './scenes/GameOverScene.js';
 import { WinScene } from './scenes/WinScene.js';
+import { CreditsScene } from './scenes/CreditsScene.js';
+import { driftLevel } from './levels/driftLevel.js';
+import { sumpLevel } from './levels/sumpLevel.js';
+
+const threshold = new LevelScene('Threshold', { tiledKey: 'threshold' }, 'Drift', 'THRESHOLD');
+const drift = new LevelScene('Drift', { data: driftLevel }, 'Sump', 'DRIFT');
+const sump = new LevelScene('Sump', { data: sumpLevel }, 'Win', 'THE SUMP');
 
 const config = {
   type: Phaser.AUTO,
@@ -20,7 +27,7 @@ const config = {
       debug: false,
     },
   },
-  scene: [BootScene, TitleScene, ThresholdScene, GameOverScene, WinScene],
+  scene: [BootScene, TitleScene, threshold, drift, sump, GameOverScene, WinScene, CreditsScene],
 };
 
 new Phaser.Game(config);
