@@ -9,11 +9,16 @@ export class WinScene extends Phaser.Scene {
 
   create() {
     this.cameras.main.fadeIn(400, 0, 0, 0);
-    this.add.text(VIEW.WIDTH / 2, 100, 'LEVEL COMPLETE', {
+
+    const farBg = this.add.tileSprite(0, 0, VIEW.WIDTH, VIEW.HEIGHT, 'bg_far')
+      .setOrigin(0, 0).setDepth(-20).setAlpha(0.45);
+    farBg.tileScaleY = VIEW.HEIGHT / 256;
+    const nearBg = this.add.tileSprite(0, 0, VIEW.WIDTH, VIEW.HEIGHT, 'bg_near')
+      .setOrigin(0, 0).setDepth(-10).setAlpha(0.3);
+    nearBg.tileScaleY = VIEW.HEIGHT / 256;
+
+    this.add.text(VIEW.WIDTH / 2, 110, 'YOU ESCAPED', {
       fontFamily: FONT, fontSize: '16px', color: '#ffffff',
-    }).setOrigin(0.5).setResolution(2);
-    this.add.text(VIEW.WIDTH / 2, 150, 'THRESHOLD', {
-      fontFamily: FONT, fontSize: '9px', color: '#888888',
     }).setOrigin(0.5).setResolution(2);
     this.add.text(VIEW.WIDTH / 2, 190, 'SCORE ' + this.finalScore, {
       fontFamily: FONT, fontSize: '11px', color: '#ffffff',

@@ -9,6 +9,14 @@ export class GameOverScene extends Phaser.Scene {
 
   create() {
     this.cameras.main.fadeIn(300, 0, 0, 0);
+
+    const farBg = this.add.tileSprite(0, 0, VIEW.WIDTH, VIEW.HEIGHT, 'bg_far')
+      .setOrigin(0, 0).setDepth(-20).setAlpha(0.4);
+    farBg.tileScaleY = VIEW.HEIGHT / 256;
+    const nearBg = this.add.tileSprite(0, 0, VIEW.WIDTH, VIEW.HEIGHT, 'bg_near')
+      .setOrigin(0, 0).setDepth(-10).setAlpha(0.25);
+    nearBg.tileScaleY = VIEW.HEIGHT / 256;
+
     this.add.text(VIEW.WIDTH / 2, 110, 'YOU DIED', {
       fontFamily: FONT, fontSize: '22px', color: '#ffffff',
     }).setOrigin(0.5).setResolution(2);

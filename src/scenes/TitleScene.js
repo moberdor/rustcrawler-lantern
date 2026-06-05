@@ -6,10 +6,12 @@ export class TitleScene extends Phaser.Scene {
   constructor() { super('Title'); }
 
   create() {
-    this.add.tileSprite(0, 0, VIEW.WIDTH, VIEW.HEIGHT, 'bg_far')
-      .setOrigin(0, 0).setDepth(-20).setAlpha(0.6);
-    this.add.tileSprite(0, 0, VIEW.WIDTH, VIEW.HEIGHT, 'bg_near')
-      .setOrigin(0, 0).setDepth(-10).setAlpha(0.45);
+    const farBg = this.add.tileSprite(0, 0, VIEW.WIDTH, VIEW.HEIGHT, 'bg_far')
+      .setOrigin(0, 0).setDepth(-20).setAlpha(0.45);
+    farBg.tileScaleY = VIEW.HEIGHT / 256;
+    const nearBg = this.add.tileSprite(0, 0, VIEW.WIDTH, VIEW.HEIGHT, 'bg_near')
+      .setOrigin(0, 0).setDepth(-10).setAlpha(0.3);
+    nearBg.tileScaleY = VIEW.HEIGHT / 256;
 
     const embers = this.add.particles(0, 0, 'spark', {
       x: { min: 0, max: VIEW.WIDTH },

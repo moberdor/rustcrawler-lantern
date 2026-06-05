@@ -13,7 +13,8 @@ export function hasLineOfSight(layer, x1, y1, x2, y2) {
     const y = y1 + dy * t;
     const tx = Math.floor(x / VIEW.TILE);
     const ty = Math.floor(y / VIEW.TILE);
-    if (layer.getTileAt(tx, ty) !== null) return false;
+    const tile = layer.getTileAt(tx, ty);
+    if (tile && tile.collides) return false;
   }
   return true;
 }

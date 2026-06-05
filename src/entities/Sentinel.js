@@ -26,9 +26,15 @@ export class Sentinel extends Phaser.Physics.Arcade.Sprite {
     this.planInterval = 350;
     this.speed = 55;
 
+    this.homeX = x;
+    this.homeY = y;
+    this.patrolRange = 40;
+    this.patrolPhase = Math.random() * Math.PI * 2;
+    this.patrolSpeed = 22;
+
     this.cone = scene.add.graphics().setDepth(3);
     this.alertText = scene.add.text(x, y - 12, '!', {
-      fontFamily: '"Press Start 2P"', fontSize: '8px', color: '#ff4444',
+      fontFamily: '"Press Start 2P"', fontSize: '8px', color: '#ffffff',
     }).setOrigin(0.5, 1).setDepth(4).setVisible(false).setResolution(2);
   }
 
@@ -57,7 +63,7 @@ export class Sentinel extends Phaser.Physics.Arcade.Sprite {
     if (visible) {
       if (this.state !== 'chase') {
         this.scene.sound.play('sfx_hit', { volume: 0.25, detune: 700 });
-        this.scene.cameras.main.flash(70, 140, 30, 30);
+        this.scene.cameras.main.flash(60, 255, 255, 255);
       }
       this.state = 'chase';
       this.lastSeen = { x: this.target.x, y: this.target.y };
@@ -80,7 +86,10 @@ export class Sentinel extends Phaser.Physics.Arcade.Sprite {
     const gx = Math.floor(this.lastSeen.x / tile);
     const gy = Math.floor(this.lastSeen.y / tile);
     const layer = this.scene.groundLayer;
-    const blocked = (x, y) => layer.getTileAt(x, y) !== null;
+    const blocked = (x, y) => {
+      const t = layer.getTileAt(x, y);
+      return !!(t && t.collides);
+    };
     const p = aStar(blocked, sx, sy, gx, gy, 600);
     if (p && p.length > 1) {
       this.path = p;
@@ -91,8 +100,19 @@ export class Sentinel extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  follow() {
-    if (this.state === 'patrol' || this.step >= this.path.length) {
+  follow(time) {
+    if (this.state === 'patrol') {
+      const sweep = Math.sin(time / 1400 + this.patrolPhase);
+      const targetX = this.homeX + sweep * this.patrolRange;
+      const dx = targetX - this.x;
+      const dy = this.homeY - this.y;
+      const vx = Phaser.Math.Clamp(dx * 4, -this.patrolSpeed, this.patrolSpeed);
+      const vy = Phaser.Math.Clamp(dy * 4, -this.patrolSpeed, this.patrolSpeed);
+      this.body.setVelocity(vx, vy);
+      this.setFlipX(Math.cos(this.facing) < 0);
+      return;
+    }
+    if (this.step >= this.path.length) {
       this.body.setVelocity(0, 0);
       return;
     }
@@ -118,11 +138,11 @@ export class Sentinel extends Phaser.Physics.Arcade.Sprite {
 
   drawCone() {
     this.cone.clear();
-    let color = 0x88ff88;
-    if (this.state === 'chase') color = 0xff4444;
-    else if (this.state === 'alert') color = 0xffaa44;
-    this.cone.fillStyle(color, 0.18);
-    this.cone.lineStyle(1, color, 0.6);
+    let fillA = 0.06, strokeA = 0.25;
+    if (this.state === 'chase') { fillA = 0.22; strokeA = 0.85; }
+    else if (this.state === 'alert') { fillA = 0.13; strokeA = 0.5; }
+    this.cone.fillStyle(0xffffff, fillA);
+    this.cone.lineStyle(1, 0xffffff, strokeA);
     this.cone.beginPath();
     this.cone.moveTo(this.x, this.y);
     const steps = 14;
@@ -135,6 +155,14 @@ export class Sentinel extends Phaser.Physics.Arcade.Sprite {
     this.cone.closePath();
     this.cone.fillPath();
     this.cone.strokePath();
+
+    if (this.state === 'chase') {
+      const reach = this.viewRange * 0.9;
+      const tipX = this.x + Math.cos(this.facing) * reach;
+      const tipY = this.y + Math.sin(this.facing) * reach;
+      this.cone.lineStyle(1, 0xffffff, 0.7);
+      this.cone.lineBetween(this.x, this.y, tipX, tipY);
+    }
   }
 
   update(time, delta) {
@@ -143,7 +171,7 @@ export class Sentinel extends Phaser.Physics.Arcade.Sprite {
       this.plan();
       this.nextPlanAt = time + this.planInterval;
     }
-    this.follow();
+    this.follow(time);
     this.drawCone();
     this.alertText.setPosition(this.x, this.y - 6);
     this.alertText.setVisible(this.state !== 'patrol');
