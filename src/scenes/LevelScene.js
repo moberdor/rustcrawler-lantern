@@ -98,9 +98,11 @@ export class LevelScene extends Phaser.Scene {
 
     this.physics.add.collider(this.player, this.groundLayer);
     this.physics.add.collider(this.enemies, this.groundLayer);
+    this.physics.add.collider(this.sentinels, this.groundLayer);
     if (this.platformSprites.length) {
       this.physics.add.collider(this.player, this.platformSprites);
       this.physics.add.collider(this.enemies, this.platformSprites);
+      this.physics.add.collider(this.sentinels, this.platformSprites);
     }
     this.physics.add.overlap(this.player, this.coins, (_p, c) => this.collect(c, 10));
     this.physics.add.overlap(this.player, this.gems, (_p, g) => this.collect(g, 100));
@@ -140,7 +142,114 @@ export class LevelScene extends Phaser.Scene {
       .setOrigin(1, 0.5).setScrollFactor(0).setVisible(false);
     this.hud.add([this.scoreText, this.keyIcon]);
 
-    if (this.levelName) this.showLevelTitle();
+    this.showBriefing();
+  }
+
+  showBriefing() {
+    const objectives = this.source.objectives
+      || (this.source.data && this.source.data.objectives);
+    if (!objectives || objectives.length === 0) {
+      if (this.levelName) this.showLevelTitle();
+      return;
+    }
+
+    this.physics.pause();
+    this.briefingActive = true;
+
+    const overlay = this.add.container(0, 0).setScrollFactor(0).setDepth(150);
+
+    const bg = this.add.rectangle(0, 0, VIEW.WIDTH, VIEW.HEIGHT, 0x000000, 0.88).setOrigin(0, 0);
+    overlay.add(bg);
+
+    const name = this.add.text(VIEW.WIDTH / 2, 44, this.levelName || 'LEVEL', {
+      fontFamily: FONT, fontSize: '14px', color: '#ffffff',
+    }).setOrigin(0.5).setResolution(2);
+    overlay.add(name);
+
+    const header = this.add.text(VIEW.WIDTH / 2, 78, 'OBJECTIVES', {
+      fontFamily: FONT, fontSize: '8px', color: '#888888',
+    }).setOrigin(0.5).setResolution(2);
+    overlay.add(header);
+
+    const startY = 110;
+    const rowHeight = 22;
+    const iconX = VIEW.WIDTH / 2 - 90;
+    const labelX = iconX + 18;
+    for (let i = 0; i < objectives.length; i++) {
+      const obj = objectives[i];
+      const y = startY + i * rowHeight;
+      const icon = this.makeObjectiveIcon(iconX, y, obj.type);
+      const label = this.add.text(labelX, y, obj.label, {
+        fontFamily: FONT, fontSize: '7px', color: '#cccccc',
+      }).setOrigin(0, 0.5).setResolution(2);
+      overlay.add([icon, label]);
+    }
+
+    const prompt = this.add.text(VIEW.WIDTH / 2, VIEW.HEIGHT - 30, 'PRESS SPACE TO BEGIN', {
+      fontFamily: FONT, fontSize: '8px', color: '#ffffff',
+    }).setOrigin(0.5).setResolution(2);
+    const promptTween = this.tweens.add({ targets: prompt, alpha: 0.4, duration: 600, yoyo: true, repeat: -1 });
+    overlay.add(prompt);
+
+    const dismiss = () => {
+      this.tweens.remove(promptTween);
+      overlay.destroy();
+      this.briefingActive = false;
+      this.physics.resume();
+    };
+    this.input.keyboard.once('keydown-SPACE', dismiss);
+    this.input.keyboard.once('keydown-ENTER', dismiss);
+  }
+
+  makeObjectiveIcon(x, y, type) {
+    if (type === 'key') return this.add.image(x, y, 'tiles', FRAMES.KEY).setOrigin(0.5);
+    if (type === 'door') return this.add.image(x, y, 'tiles', FRAMES.DOOR_LOCKED).setOrigin(0.5);
+    if (type === 'coin') return this.add.image(x, y, 'tiles', FRAMES.COIN).setOrigin(0.5);
+    if (type === 'gem') return this.add.image(x, y, 'tiles', FRAMES.GEM).setOrigin(0.5);
+    if (type === 'heart') return this.add.image(x, y, 'tiles', FRAMES.HEART_FULL).setOrigin(0.5);
+    const g = this.add.graphics();
+    if (type === 'plate') {
+      g.fillStyle(0xffffff, 1);
+      g.fillRect(x - 6, y + 1, 12, 1);
+      g.fillRect(x - 7, y + 2, 14, 1);
+      g.fillRect(x - 7, y + 3, 14, 2);
+    } else if (type === 'lever') {
+      g.fillStyle(0xffffff, 1);
+      g.fillRect(x - 4, y + 3, 8, 3);
+      g.fillRect(x - 1, y + 1, 2, 2);
+      g.fillRect(x - 2, y - 4, 2, 6);
+      g.fillRect(x - 4, y - 5, 2, 2);
+    } else if (type === 'lamp') {
+      g.lineStyle(1, 0xffffff, 0.7);
+      g.strokeCircle(x, y, 4);
+    } else if (type === 'lamp_on') {
+      g.fillStyle(0xffffff, 0.25);
+      g.fillCircle(x, y, 7);
+      g.fillStyle(0xffffff, 1);
+      g.fillCircle(x, y, 3);
+    } else if (type === 'sentinel') {
+      g.fillStyle(0xffffff, 0.18);
+      g.lineStyle(1, 0xffffff, 0.7);
+      g.beginPath();
+      g.moveTo(x + 5, y);
+      g.lineTo(x - 6, y - 6);
+      g.lineTo(x - 6, y + 6);
+      g.closePath();
+      g.fillPath();
+      g.strokePath();
+      g.fillStyle(0xffffff, 1);
+      g.fillRect(x + 4, y - 1, 3, 3);
+    } else if (type === 'lantern_off') {
+      g.lineStyle(1, 0xffffff, 0.7);
+      g.strokeCircle(x, y, 5);
+      g.lineBetween(x - 4, y - 4, x + 4, y + 4);
+    } else if (type === 'lantern_on') {
+      g.fillStyle(0xffffff, 0.25);
+      g.fillCircle(x, y, 8);
+      g.fillStyle(0xffffff, 1);
+      g.fillCircle(x, y, 3);
+    }
+    return g;
   }
 
   showLevelTitle() {
@@ -404,7 +513,7 @@ export class LevelScene extends Phaser.Scene {
   }
 
   update(time, delta) {
-    if (this._dying || this._exiting) return;
+    if (this._dying || this._exiting || this.briefingActive) return;
     this.player.update(time, delta);
     for (const e of this.enemies.getChildren()) e.update(time, delta);
     for (const f of this.flyers.getChildren()) f.update(time, delta);

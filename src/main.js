@@ -8,7 +8,12 @@ import { CreditsScene } from './scenes/CreditsScene.js';
 import { driftLevel } from './levels/driftLevel.js';
 import { sumpLevel } from './levels/sumpLevel.js';
 
-const threshold = new LevelScene('Threshold', { tiledKey: 'threshold' }, 'Drift', 'THRESHOLD');
+const thresholdObjectives = [
+  { type: 'coin', label: 'COLLECT COINS FOR SCORE' },
+  { type: 'key', label: 'FIND THE KEY' },
+  { type: 'door', label: 'REACH THE DOOR' },
+];
+const threshold = new LevelScene('Threshold', { tiledKey: 'threshold', objectives: thresholdObjectives }, 'Drift', 'THRESHOLD');
 const drift = new LevelScene('Drift', { data: driftLevel }, 'Sump', 'DRIFT');
 const sump = new LevelScene('Sump', { data: sumpLevel }, 'Win', 'THE SUMP');
 
