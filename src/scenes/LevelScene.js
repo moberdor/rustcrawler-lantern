@@ -122,10 +122,10 @@ export class LevelScene extends Phaser.Scene {
     this.lighting = new Lighting(this, mapW, mapH);
     this.lighting.add(() => ({
       x: this.player.x, y: this.player.y,
-      on: this.player.lanternOn, flicker: true, scale: 1.4,
+      on: this.player.lanternOn, flicker: true, scale: 1.1,
     }));
     for (const lp of this.lamps) {
-      this.lighting.add(() => ({ x: lp.x, y: lp.y, on: lp.on, flicker: false, scale: 0.9 }));
+      this.lighting.add(() => ({ x: lp.x, y: lp.y, on: lp.on, flicker: false, scale: 0.7 }));
     }
 
     this.hud = this.add.container(0, 0).setScrollFactor(0).setDepth(100);

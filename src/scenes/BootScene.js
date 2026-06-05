@@ -40,7 +40,7 @@ export class BootScene extends Phaser.Scene {
         const dy = y - center;
         const d = Math.sqrt(dx * dx + dy * dy);
         const t = Math.min(1, d / center);
-        const a = Math.pow(Math.max(0, 1 - t), 0.7);
+        const a = Math.pow(Math.max(0, 1 - t), 2.2);
         const i = (y * size + x) * 4;
         img.data[i] = 255;
         img.data[i + 1] = 255;

@@ -34,17 +34,16 @@ export const sumpLevel = {
   coins: [
     { x: 56, y: 176 }, { x: 80, y: 176 },
     { x: 248, y: 176 }, { x: 280, y: 176 }, { x: 312, y: 176 },
-    { x: 504, y: 80 }, { x: 520, y: 80 },
+    { x: 504, y: 72 }, { x: 520, y: 72 },
     { x: 720, y: 176 }, { x: 760, y: 176 },
     { x: 872, y: 56 },
   ],
   gems: [
     { x: 528, y: 64 },
-    { x: 528, y: 176 },
   ],
   levers: [
     { x: 96, y: 184, name: 'lev1', targets: 'plat1,lamp1' },
-    { x: 552, y: 184, name: 'lev2', targets: 'plat2,lamp2' },
+    { x: 552, y: 184, name: 'lev2', targets: 'plat3,lamp2' },
   ],
   lamps: [
     { x: 280, y: 80, name: 'lamp1', startOn: false },
@@ -52,13 +51,13 @@ export const sumpLevel = {
   ],
   movingPlatforms: [
     { x: 128, y: 192, w: 64, dx: 0, dy: -48, duration: 2300, triggerable: true, name: 'plat1' },
-    { x: 368, y: 192, w: 64, dx: 0, dy: -56, duration: 2100 },
-    { x: 608, y: 192, w: 64, dx: 0, dy: -48, duration: 2400, triggerable: true, name: 'plat2' },
+    { x: 368, y: 192, w: 64, dx: 0, dy: -56, duration: 2100, name: 'plat2' },
+    { x: 624, y: 192, w: 64, dx: 0, dy: -48, duration: 2400, triggerable: true, name: 'plat3' },
   ],
   sentinels: [
-    { x: 280, y: 96, facing: 90 },
+    { x: 280, y: 104, facing: 90 },
     { x: 528, y: 152, facing: 180 },
-    { x: 776, y: 96, facing: 90 },
+    { x: 776, y: 104, facing: 90 },
   ],
   spikes: [
     { x: 240, y: 176, w: 32, h: 16 },

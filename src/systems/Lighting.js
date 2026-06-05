@@ -3,7 +3,7 @@ export class Lighting {
     this.scene = scene;
     this.width = width;
     this.height = height;
-    this.darkAlpha = 0.88;
+    this.darkAlpha = 0.96;
 
     this.dark = scene.add.image(0, 0, '__WHITE')
       .setOrigin(0, 0)
