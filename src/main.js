@@ -1,3 +1,29 @@
+/*
+ * RUSTCRAWLER - CMPM 120 Final Project
+ * Marcus Oberdorfer (moberdor)
+ *
+ *  - Lantern lighting: 
+ *    - A RenderTexture is drawn each frame with a radial gradient brush at the player and every light source.
+ *    - The RenderTexture is used as an inverted BitmapMask over a black overlay covering the entire level so everything is dark outside of the lights.
+ *    - Pressing Q disables the player's lamp so they can hide from the sentinel AI enemies.
+ *
+ *  - Sentinel AI:
+ *    - Self made A* over the tilemap drives chase paths towards the player. (Pathfinding.js, no library from elsewhere)
+ *    - Tile sampling raycast (Vision.js) is the visibility check that the Sentinel AIs use.
+ *    - Sentinels have three patrol state, alert state, chase state.
+ *    - Alert state holds for ~1.5 seconds so sentinels dont instantly lose the player when line of sight is lost.
+ *
+ *  - Switch system: 
+ *    - PressurePlate and Lever both extend a Switch base class. 
+ *    - Switches store target names, and the scene associates them with triggerable objects (Lamps and MovingPlatforms) from name lookup.
+ *    - Set up from the level, not hardcoded.
+ *
+ *  - Black and white 1-bit pixel art style from Kenney 1-bit platformer pack
+ * 
+ *  - Procedural cave parallax background generated in BootScene, not from an image
+ * 
+ *  - Briefing screens with sprite previews and objective before each level
+ */
 import { VIEW } from './config.js';
 import { BootScene } from './scenes/BootScene.js';
 import { TitleScene } from './scenes/TitleScene.js';

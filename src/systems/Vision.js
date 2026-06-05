@@ -1,3 +1,6 @@
+// Line of sight check between 2 points
+// Checks along the ray every half tile, samples tilemap each step
+// If any sample lands on a tile that collides, sight is blocked
 import { VIEW } from '../config.js';
 
 export function hasLineOfSight(layer, x1, y1, x2, y2) {

@@ -45,7 +45,11 @@ export class Sentinel extends Phaser.Physics.Arcade.Sprite {
     if (this.alertText) this.alertText.destroy();
     super.destroy(fromScene);
   }
-
+// Sentinel states are patrol, alert, and chase
+// Player must be in range + inside the view cone + line of sight check + lantern enabled to be seen
+// Seeing the player sets chase state and saves last known player position
+// Losing line of sight changes state from chase to alert for ~1.5 seconds before going to patrol state
+// Lantern off disables detection
   scan(time) {
     if (!this.target) return;
     const lit = this.target.lanternOn !== false;

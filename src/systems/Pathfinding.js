@@ -1,3 +1,7 @@
+// A* over the tile grid
+// Caller passes in `isBlocked(x,y)` function + start anSd goal tile coordinates
+// Checks 4 neighbors of each tile and uses manhattan distance for the heuristic
+// No priority queue, it simply scans the open list for the lowest f each loop
 export function aStar(isBlocked, sx, sy, gx, gy, maxNodes) {
   if (isBlocked(gx, gy)) return null;
   if (sx === gx && sy === gy) return [{ x: sx, y: sy }];

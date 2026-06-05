@@ -28,7 +28,9 @@ export class Lighting {
   add(getter) {
     this.lights.push(getter);
   }
-
+  // Re renders lighting per frame
+  // Clears the mask RenderTexture then places gradient brush at each light source
+  // Dark overlay uses this RenderTexture as an inverted BitmapMask
   update(time) {
     const a = this.darkAlpha + Math.sin(time / 700) * 0.015;
     this.dark.setAlpha(a);

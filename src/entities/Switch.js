@@ -15,6 +15,8 @@ export class Switch extends Phaser.Physics.Arcade.Sprite {
     if (target && !this.targets.includes(target)) this.targets.push(target);
   }
 
+  // Tells every linked target this switch changed
+  // Targets use `onActivate()` / `onDeactivate()` to listen
   fire(on) {
     if (on === this.active) return;
     this.active = on;
